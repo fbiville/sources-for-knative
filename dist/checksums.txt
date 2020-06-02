@@ -1,0 +1,4 @@
+e2d9804995b24e02982c2a9c2997faecb3cf1978aa0cd2f39ce762f378dc9707  kn-vsphere_0.0.18_Darwin_x86_64.tar.gz
+5c6f3bbc15324daddf50789cacd4575729d0927e2a56f6a0cbbeed0c4e7a559e  kn-vsphere_0.0.18_Linux_x86_64.tar.gz
+4d5271b6ce928db1e2647b34497c2dbeb67fba7d350a1b4d93a977b56391e433  kn-vsphere_0.0.18_Linux_i386.tar.gz
+58324e6fe50550d3f1cb54974b6d7b5ec275001afc45f0b191171346ef55aa3a  kn-vsphere_0.0.18_Darwin_i386.tar.gz
