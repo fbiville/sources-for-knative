@@ -8,7 +8,28 @@ name: Create Release
 
 jobs:
 
+  kn-vsphere:
+    name: Release vSphere Knative plugin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+      - name: GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          version: latest
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   ko-resolve:
+    needs: kn-vsphere
     name: Release ko artifact
     runs-on: ubuntu-latest
     env:
@@ -42,18 +63,8 @@ jobs:
     - name: Build and Publish images, Produce release artifact.
       working-directory: ./src/github.com/${{ github.repository }}
       run: |
+        echo ${{ github.ref }}
         ko resolve --tags $(basename "${{ github.ref }}" ) -BRf config/ > release.yaml
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: true
 
     - name: Upload Release Asset
       id: upload-release-asset
@@ -61,7 +72,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: "https://github.com/${{ github.repository }}/releases/${{ github.ref }}"
         asset_path: ./src/github.com/${{ github.repository }}/release.yaml
         asset_name: release.yaml
         asset_content_type: text/plain
