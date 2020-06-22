@@ -81,7 +81,9 @@ jobs:
           path: ./src/github.com/${{ github.repository }}
 
       - name: Unshallow
-        run: git fetch --prune --unshallow
+        run: |
+          cd ./src/github.com/${{ github.repository }}
+          git fetch --prune --unshallow
 
       - name: Set up Go 1.14.x
         uses: actions/setup-go@v1
@@ -93,7 +95,7 @@ jobs:
         with:
           version: latest
           args: release --rm-dist
-          workdir: ./plugins/vsphere
+          workdir: ./src/github.com/${{ github.repository }}/plugins/vsphere
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
