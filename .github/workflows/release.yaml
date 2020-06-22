@@ -81,7 +81,10 @@ jobs:
           path: ./src/github.com/${{ github.repository }}
 
       - name: Unshallow
-        run: git fetch --prune --unshallow
+        run: |
+          cd ./src/github.com/${{ github.repository }}
+          git fetch --prune --unshallow
+          ls plugins/vsphere
 
       - name: Set up Go 1.14.x
         uses: actions/setup-go@v1
@@ -89,11 +92,11 @@ jobs:
           go-version: 1.14.x
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v1
+        uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
           args: release --rm-dist
-          workdir: ./plugins/vsphere
+          workdir: ./src/github.com/${{ github.repository }}/plugins/vsphere
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
