@@ -1,0 +1,32 @@
+before:
+  hooks:
+    - ko resolve --tags "{{ .Tag }}" -BRf config/ > release.yaml
+builds:
+  - id: "ko-release"
+    binary: release.yaml
+    env:
+    - CGO_ENABLED=0
+    main: ./dummy/main.go # managed by hack/package.sh
+    hooks:
+      pre: ./hack/package.sh prepare {{ .Path }}
+      post: ./hack/package.sh cleanup {{ .Path }}
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+archives:
+  - id: ko-release
+    format: binary
+    files:
+    - release.yaml
+release:
+  name_template: Release {{ .Tag }}
+  draft: false
+  prerelease: true
+  # remove subsequent lines before merging
+  github:
+    owner: fbiville
+    name: sources-for-knative
