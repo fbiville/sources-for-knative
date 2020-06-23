@@ -1,0 +1,26 @@
+before:
+  hooks:
+    - ko resolve --tags $(basename "{{ .Tag }}" ) -BRf config/ > release.yaml
+builds:
+- env:
+  - CGO_ENABLED=0
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+archives:
+  - id: ko-release
+    name_template: release.yaml
+    format: binary
+    files:
+    - release.yaml
+release:
+  name_template: Release {{ .Tag }}
+  draft: false
+  prerelease: true
+  # remove subsequent lines before merging
+  github:
+    owner: fbiville
+    name: sources-for-knative
